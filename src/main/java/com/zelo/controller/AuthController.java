@@ -7,27 +7,25 @@ import com.zelo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/auth")
+@CrossOrigin(origins = "*") // Permite requisições de qualquer origem (Vercel)
+@RequestMapping({"/api/auth", ""}) // Aceita chamadas com ou sem /api/auth
 public class AuthController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("/cadastro")
+    @PostMapping({"/cadastro", "/api/auth/cadastro"})
     public ResponseEntity<Usuario> cadastrar(@RequestBody CadastroUsuarioDTO dto) {
         Usuario novoUsuario = usuarioService.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
     }
 
-    @PostMapping("/login")
+    @PostMapping({"/login", "/api/auth/login"})
     public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
         Optional<Usuario> usuario = usuarioService.login(dto);
 
